@@ -29,6 +29,7 @@ public class App {
 
 	public int handleCommandLine(String[] args) throws IOException {
 		String usage = readClassPathFile(App.class, "usage.txt");
+		@SuppressWarnings("unchecked")
 		AbstractMap<String, Object> result = clj.docopt(usage, args);
 
 		if (result == null) {
@@ -52,6 +53,7 @@ public class App {
 		System.out.println(print);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static String readClassPathFile(Class clazz, String filename)
 			throws IOException {
 		URL resource = clazz.getClassLoader().getResource(filename);
