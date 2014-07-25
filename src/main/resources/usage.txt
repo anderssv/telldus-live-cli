@@ -1,0 +1,9 @@
+Telldus live
+
+Usage:
+  telldus-live device on <id>
+  telldus-live -h | --help
+
+Options:
+  -h --help     Show this screen.
+  
