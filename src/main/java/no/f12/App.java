@@ -3,9 +3,10 @@ package no.f12;
 import java.io.IOException;
 import java.net.URL;
 import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
-
 import org.docopt.clj;
 
 /**
@@ -14,12 +15,19 @@ import org.docopt.clj;
  */
 public class App {
 
+	private Map<String, String> deviceStates = new HashMap<>();
+	
+	public App() {
+		
+	}
+	
 	public static void main(String[] args) throws IOException {
-		int exitCode = parseCommandLine(args);
+		App app = new App();
+		int exitCode = app.handleCommandLine(args);
 		System.exit(exitCode);
 	}
 
-	public static int parseCommandLine(String[] args) throws IOException {
+	public int handleCommandLine(String[] args) throws IOException {
 		String usage = readClassPathFile(App.class, "usage.txt");
 		AbstractMap<String, Object> result = clj.docopt(usage, args);
 
@@ -29,7 +37,12 @@ public class App {
 		} else if ((Boolean) result.get("--help")) {
 			print(usage);
 		} else if ((Boolean) result.get("device")) {
-			print("Device on!!!");
+			if ((Boolean) result.get("on")) {
+				String deviceId = (String) result.get("<device_id>");
+				this.deviceStates.put(deviceId, "on");
+			} else {
+				
+			}
 		}
 		
 		return 0;
@@ -44,6 +57,10 @@ public class App {
 		URL resource = clazz.getClassLoader().getResource(filename);
 		String json = IOUtils.toString(resource.openStream());
 		return json;
+	}
+
+	public boolean getDeviceState(String id) {
+		return this.deviceStates.containsKey(id);
 	}
 
 }

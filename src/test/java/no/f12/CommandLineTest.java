@@ -8,15 +8,32 @@ import static org.junit.Assert.*;
 
 public class CommandLineTest {
 
+	private static String DEVICE_ID = "444444";
+	
+	
+	private App createTestApplication() {
+		App app = new App();
+		return app;
+	}
+	
 	@Test
 	public void shouldPassCommandLineChecksForDeviceOn() throws IOException {
-		App.parseCommandLine(new String[] { "device", "on", "444444" });
+		int returnCode = createTestApplication().handleCommandLine(new String[] { "device", "on", DEVICE_ID });
+		assertEquals(0, returnCode);
 	}
 
 	@Test
 	public void shouldNotPassCommandLineChecksForBlank() throws IOException {
-		int returnCode = App.parseCommandLine(new String[] {});
+		int returnCode = createTestApplication().handleCommandLine(new String[] {});
 		assertEquals(1, returnCode);
+	}
+
+	@Test
+	public void shouldTurnOnDevice() throws IOException {
+		App application = new App();
+		
+		application.handleCommandLine(new String[] {"device", "on", DEVICE_ID});
+		assertTrue(application.getDeviceState(DEVICE_ID));
 	}
 
 }

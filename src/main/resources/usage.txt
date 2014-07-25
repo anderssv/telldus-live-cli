@@ -1,7 +1,7 @@
 Telldus live
 
 Usage:
-  telldus-live device on <id>
+  telldus-live device (on|off) <device_id>
   telldus-live -h | --help
 
 Options:
