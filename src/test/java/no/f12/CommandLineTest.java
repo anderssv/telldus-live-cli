@@ -37,12 +37,6 @@ public class CommandLineTest {
 		assertTrue(application.getDeviceState(DEVICE_ID));
 	}
 	
-	@Test
-	public void shouldListAllDevices() {
-		TelldusRepository repo = new TelldusLiveRepsitoryImpl();
-		Set<Device> devices = repo.getDevices();
-		assertNotNull(devices);
-	}
 	
 
 }
