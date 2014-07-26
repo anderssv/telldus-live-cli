@@ -1,6 +1,7 @@
 package no.f12;
 
 import java.io.IOException;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -35,5 +36,13 @@ public class CommandLineTest {
 		application.handleCommandLine(new String[] {"device", "on", DEVICE_ID});
 		assertTrue(application.getDeviceState(DEVICE_ID));
 	}
+	
+	@Test
+	public void shouldListAllDevices() {
+		TelldusRepository repo = new TelldusLiveRepsitoryImpl();
+		Set<Device> devices = repo.getDevices();
+		assertNotNull(devices);
+	}
+	
 
 }
