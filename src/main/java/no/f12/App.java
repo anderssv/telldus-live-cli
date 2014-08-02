@@ -1,12 +1,10 @@
 package no.f12;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
 import org.docopt.clj;
 
 /**
@@ -28,7 +26,7 @@ public class App {
 	}
 
 	public int handleCommandLine(String[] args) throws IOException {
-		String usage = readClassPathFile(App.class, "usage.txt");
+		String usage = FileUtil.readClassPathFile(App.class, "usage.txt");
 		@SuppressWarnings("unchecked")
 		AbstractMap<String, Object> result = clj.docopt(usage, args);
 
@@ -51,14 +49,6 @@ public class App {
 
 	public static void print(Object print) {
 		System.out.println(print);
-	}
-
-	@SuppressWarnings("rawtypes")
-	public static String readClassPathFile(Class clazz, String filename)
-			throws IOException {
-		URL resource = clazz.getClassLoader().getResource(filename);
-		String json = IOUtils.toString(resource.openStream());
-		return json;
 	}
 
 	public boolean getDeviceState(String id) {

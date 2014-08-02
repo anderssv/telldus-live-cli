@@ -18,17 +18,16 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 
-import com.google.gson.Gson;
+import static no.f12.JsonParser.parseJson;
 
 public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 
 	@Override
 	public Set<Device> getDevices() {
-		OAuthRequest request = createAndSignRequest("sensors/list", (String) null);
+		OAuthRequest request = createAndSignRequest("devices/list", (String) null);
 		Response response = request.send();
 
-		MapNavigationWrapper jsonMap = this.parseJson(response.getBody());
-
+		MapNavigationWrapper jsonMap = parseJson(response.getBody());
 		
 		return new HashSet<>();
 	}
@@ -99,12 +98,6 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 			idParam.put("id", deviceId);
 		}
 		return idParam;
-	}
-	
-	private static MapNavigationWrapper parseJson(String response) {
-		Map<String, Object> map = new Gson().fromJson(response, HashMap.class);
-		MapNavigationWrapper wrapper = new MapNavigationWrapper(map);
-		return wrapper;
 	}
 
 
