@@ -2,8 +2,6 @@ package no.f12;
 
 import java.io.IOException;
 import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.docopt.clj;
 
@@ -13,14 +11,18 @@ import org.docopt.clj;
  */
 public class App {
 
-	private Map<String, String> deviceStates = new HashMap<>();
+	private TelldusRepository repository;
 	
-	public App() {
+	public App(TelldusRepository repo) {
+		this.repository = repo;
 		
+		if (this.repository == null) {
+			throw new IllegalStateException("Cannot create application without repository");
+		}
 	}
 	
 	public static void main(String[] args) throws IOException {
-		App app = new App();
+		App app = new App(new TelldusLiveRepsitoryImpl());
 		int exitCode = app.handleCommandLine(args);
 		System.exit(exitCode);
 	}
@@ -38,7 +40,7 @@ public class App {
 		} else if ((Boolean) result.get("device")) {
 			if ((Boolean) result.get("on")) {
 				String deviceId = (String) result.get("<device_id>");
-				this.deviceStates.put(deviceId, "on");
+				this.repository.turnDeviceOn(deviceId);
 			} else {
 				
 			}
@@ -51,8 +53,8 @@ public class App {
 		System.out.println(print);
 	}
 
-	public boolean getDeviceState(String id) {
-		return this.deviceStates.containsKey(id);
+	public Boolean getDeviceState(String id) {
+		return this.repository.getDeviceState(id);
 	}
 
 }

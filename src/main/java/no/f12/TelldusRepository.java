@@ -1,13 +1,17 @@
 package no.f12;
 
-import java.util.Set;
+import java.util.List;
 
 import org.scribe.model.OAuthRequest;
 
 public interface TelldusRepository {
 
-	Set<Device> getDevices();
+	List<Device> getDevices();
 
 	OAuthRequest createAndSignRequest(String string, String deviceId);
+
+	Boolean getDeviceState(String id);
+
+	void turnDeviceOn(String deviceId);
 
 }

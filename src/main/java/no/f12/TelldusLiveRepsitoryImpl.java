@@ -1,14 +1,16 @@
 package no.f12;
 
+import static no.f12.JsonParser.parseJson;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.GoogleApi;
@@ -18,18 +20,28 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 
-import static no.f12.JsonParser.parseJson;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 
 	@Override
-	public Set<Device> getDevices() {
+	public List<Device> getDevices() {
 		OAuthRequest request = createAndSignRequest("devices/list", (String) null);
 		Response response = request.send();
 
 		MapNavigationWrapper jsonMap = parseJson(response.getBody());
+		List<Map> deviceMaps = (List<Map>) jsonMap.get("device");
+		List<MapNavigationWrapper> deviceMapList = new ArrayList<>();
+		for (Map deviceMap : deviceMaps) {
+			deviceMapList.add(new MapNavigationWrapper(deviceMap));
+		}
 		
-		return new HashSet<>();
+		List<Device> devices = new ArrayList<>();
+		for (MapNavigationWrapper deviceMap: deviceMapList) {
+			devices.add(new Device(Integer.getInteger((String) deviceMap.get("id"))));
+		}
+		
+		return devices;
 	}
 	
 	public OAuthRequest createAndSignRequest(String url, String id) {
@@ -98,6 +110,16 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 			idParam.put("id", deviceId);
 		}
 		return idParam;
+	}
+
+	@Override
+	public Boolean getDeviceState(String id) {
+		return null;
+	}
+
+	@Override
+	public void turnDeviceOn(String deviceId) {
+		
 	}
 
 

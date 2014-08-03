@@ -1,19 +1,29 @@
 package no.f12;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
-import java.util.Set;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class CommandLineTest {
 
 	private static String DEVICE_ID = "444444";
 	
-	
 	private App createTestApplication() {
-		App app = new App();
+		Boolean stubbing = Boolean.FALSE; 
+		String stubEnvSetting = System.getenv("TELLDUS_CLI_STUB");
+		if (stubEnvSetting != null) {
+			stubbing = Boolean.TRUE;
+		}
+		
+		TelldusRepository repo = new TelldusLiveRepsitoryImpl();
+		if (stubbing) {
+			repo = new TelldusLiveRepositoryStub();
+		}
+		
+		App app = new App(repo);
 		return app;
 	}
 	
@@ -31,7 +41,7 @@ public class CommandLineTest {
 
 	@Test
 	public void shouldTurnOnDevice() throws IOException {
-		App application = new App();
+		App application = createTestApplication();
 		
 		application.handleCommandLine(new String[] {"device", "on", DEVICE_ID});
 		assertTrue(application.getDeviceState(DEVICE_ID));

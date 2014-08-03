@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -19,6 +20,7 @@ public class JsonNavigationTest {
 		assertNotNull(json);
 		assertNotNull(jsonMap);
 		assertNotNull(jsonMap.get("device"));
+		assertTrue(jsonMap.get("device") instanceof List);
 		assertNotNull(jsonMap.get("device[0]"));
 		assertTrue(((Map) jsonMap.get("device[0]")).get("id").equals("1"));
 	}
