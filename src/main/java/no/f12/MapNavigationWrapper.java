@@ -1,5 +1,6 @@
 package no.f12;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -23,18 +24,12 @@ public class MapNavigationWrapper {
 	
 	private Queue<ItemSelector> parsePath(String path) {
 		Queue<ItemSelector> selectors = new LinkedList<>();
-		for (String pathElement : path.split("\\.")) {
-			ItemSelector selector = parseSelector(pathElement);
-			selectors.add(selector);
-		}
+		Arrays.asList(path.split("\\.")).forEach(element -> selectors.add(parseSelector(element)));;
 		
 		return selectors;
 	}
 
 	private Object recurse(Object currentLevel, Queue<ItemSelector> selectors) {
-		System.out.println("Level: " + currentLevel);
-		System.out.println("Selectors: " + selectors);
-
 		ItemSelector currentSelector = selectors.poll();
 		
 		if (currentSelector != null) {
