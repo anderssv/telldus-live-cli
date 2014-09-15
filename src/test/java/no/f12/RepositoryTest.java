@@ -14,5 +14,11 @@ public class RepositoryTest {
 		assertNotNull(devices); 
 		assertTrue(devices.size() > 0);
 	}
+	
+	public void shouldRetrieveDeviceStatus() {
+		TelldusRepository repo = new TelldusLiveRepsitoryImpl();
+		
+		
+	}
 
 }

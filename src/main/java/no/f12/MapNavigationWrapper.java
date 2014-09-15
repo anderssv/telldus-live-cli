@@ -14,9 +14,7 @@ public class MapNavigationWrapper {
 		this.map = map;
 	}
 
-	public Object get(String path) {
-		System.out.println("Start");
-		
+	public Object get(String path) {		
 		Queue<ItemSelector> selectors = parsePath(path);
 		
 		return recurse(map, selectors);
@@ -110,6 +108,13 @@ public class MapNavigationWrapper {
 			return new ItemSelector(elementString, null);
 		}
 	}
+
+	@Override
+	public String toString() {
+		return map.toString();
+	}
+	
+	
 	
 	
 

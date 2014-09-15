@@ -17,7 +17,7 @@ public class TelldusLiveRepositoryStub implements TelldusRepository {
 	}
 
 	@Override
-	public OAuthRequest createAndSignRequest(String string, String deviceId) {
+	public OAuthRequest createAndSignRequest(String string, Map<String, String> params) {
 		// TODO Auto-generated method stub
 		return null;
 	}

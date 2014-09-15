@@ -1,11 +1,6 @@
 package no.f12;
 
 import static no.f12.JsonParser.parseJson;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,16 +15,15 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 
 	@Override
 	public List<Device> getDevices() {
-		OAuthRequest request = createAndSignRequest("devices/list", (String) null);
+		OAuthRequest request = createAndSignRequest("devices/list", null);
 		Response response = request.send();
 
 		MapNavigationWrapper jsonMap = parseJson(response.getBody());
+		
 		List<Map> deviceMaps = (List<Map>) jsonMap.get("device");
 		List<MapNavigationWrapper> deviceMapList = new ArrayList<>();
 		for (Map deviceMap : deviceMaps) {
@@ -44,15 +38,45 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 		return devices;
 	}
 	
-	public OAuthRequest createAndSignRequest(String url, String id) {
-		Map<String, String> parameters = idMap(id);
-		return createAndSignRequest(url, parameters);
+	@Override
+	public Boolean getDeviceState(String id) {
+		
+		Map<String, String> params = new HashMap<>();
+		params.put("id", id);
+		params.put("supportedMethods", "1");
+		OAuthRequest request = this.createAndSignRequest("device/info",
+				params);
+		Response response = request.send();
+
+		MapNavigationWrapper jsonMap = parseJson(response.getBody());
+		assertOk(response, jsonMap);
+		
+		String deviceState = (String) jsonMap.get("state");
+		Boolean result = Boolean.FALSE;
+		if (deviceState.equals("1")) {
+			result = Boolean.TRUE;
+		}
+		
+		return result;
+	}
+
+
+
+	@Override
+	public void turnDeviceOn(String deviceId) {
+		
+	}
+
+	private void assertOk(Response response, MapNavigationWrapper jsonMap) {
+		if (!"HTTP/1.1 200 OK".equals(response.getHeader(null)) || response.getBody() == null || jsonMap.get("error") != null) {
+			throw new RuntimeException("Result from server is nok ok! Header: " + response.getHeaders() + " --- Result: " + jsonMap.toString());
+		}
 	}
 	
-	private OAuthRequest createAndSignRequest(String url,
+	public OAuthRequest createAndSignRequest(String url,
 			Map<String, String> parameters) {
 
-		Properties props = readPropertyFile();
+		Properties props = FileUtil.readPropertyFile();
 
 		String publicKey = props.getProperty("telldus.api.key.public");
 		String secretKey = props.getProperty("telldus.api.key.secret");
@@ -81,24 +105,6 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 		return request;
 	}
 
-	Properties readPropertyFile() {
-		Properties props = new Properties();
-		try {
-			File file = new File("telldus-auth.properties");
-			FileInputStream fileInput = new FileInputStream(file);
-			props.load(fileInput);
-			fileInput.close();
-
-		} catch (FileNotFoundException e) {
-			throw new RuntimeException(
-					"Could not locate properties for Telldus authentication", e);
-		} catch (IOException e) {
-			throw new RuntimeException(
-					"Error reading properties file for Telldus authentication",
-					e);
-		}
-		return props;
-	}
 
 	private String telldusUrl(String extension) {
 		return "http://api.telldus.com/json/" + extension;
@@ -111,16 +117,5 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 		}
 		return idParam;
 	}
-
-	@Override
-	public Boolean getDeviceState(String id) {
-		return null;
-	}
-
-	@Override
-	public void turnDeviceOn(String deviceId) {
-		
-	}
-
 
 }
