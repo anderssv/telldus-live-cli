@@ -11,7 +11,7 @@ public class CommandLineTest {
 
 	private static String DEVICE_ID = "444444";
 
-	private App createTestApplication() {
+	public static App createTestApplication() {
 		Boolean stubbing = Boolean.FALSE;
 		String stubEnvSetting = System.getenv("TELLDUS_CLI_STUB");
 		if (stubEnvSetting != null) {

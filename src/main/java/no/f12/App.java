@@ -57,4 +57,8 @@ public class App {
 		return this.repository.getDeviceState(id);
 	}
 
+	public TelldusRepository getTelldusRepository() {
+		return this.repository;
+	}
+
 }
