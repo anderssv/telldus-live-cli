@@ -43,5 +43,10 @@ public class TelldusLiveRepositoryStub implements TelldusRepository {
 	public void turnDeviceOn(String deviceId) {
 		this.deviceStates.put(deviceId, "true");
 	}
+	
+	@Override
+	public void turnDeviceOff(String deviceId) {
+		this.deviceStates.put(deviceId, "false");
+	}
 
 }

@@ -15,4 +15,6 @@ public interface TelldusRepository {
 
 	void turnDeviceOn(String deviceId);
 
+	void turnDeviceOff(String deviceId);
+
 }

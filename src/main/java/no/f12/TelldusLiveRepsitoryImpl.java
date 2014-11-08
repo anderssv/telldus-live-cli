@@ -1,6 +1,7 @@
 package no.f12;
 
 import static no.f12.JsonParser.parseJson;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,8 @@ import org.scribe.model.Response;
 import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 
@@ -40,7 +43,6 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 	
 	@Override
 	public Boolean getDeviceState(String id) {
-		
 		Map<String, String> params = new HashMap<>();
 		params.put("id", id);
 		params.put("supportedMethods", "1");
@@ -62,13 +64,8 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 
 
 
-	@Override
-	public void turnDeviceOn(String deviceId) {
-		
-	}
-
 	private void assertOk(Response response, MapNavigationWrapper jsonMap) {
-		if (!"HTTP/1.1 200 OK".equals(response.getHeader(null)) || response.getBody() == null || jsonMap.get("error") != null) {
+		if (!"HTTP/1.1 200 OK".equals(response.getHeader(null)) || response.getBody() == null || jsonMap.check("error") != null) {
 			throw new RuntimeException("Result from server is nok ok! Header: " + response.getHeaders() + " --- Result: " + jsonMap.toString());
 		}
 	}
@@ -131,6 +128,42 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 			idParam.put("id", deviceId);
 		}
 		return idParam;
+	}
+
+	@Override
+	public void turnDeviceOn(String deviceId) {
+		Map<String, String> params = new HashMap<>();
+		params.put("id", deviceId);
+		OAuthRequest request = this.createAndSignRequest("device/turnOn",
+				params);
+		Response response = request.send();
+
+		MapNavigationWrapper jsonMap = parseJson(response.getBody());
+		assertOk(response, jsonMap);
+		
+		String deviceState = (String) jsonMap.get("status");
+		Boolean result = Boolean.FALSE;
+		if (!deviceState.equals("success")) {
+			throw new IllegalStateException("Could not turn on device with id: " + deviceId);
+		}
+	}
+
+	@Override
+	public void turnDeviceOff(String deviceId) {
+		Map<String, String> params = new HashMap<>();
+		params.put("id", deviceId);
+		OAuthRequest request = this.createAndSignRequest("device/turnOff",
+				params);
+		Response response = request.send();
+
+		MapNavigationWrapper jsonMap = parseJson(response.getBody());
+		assertOk(response, jsonMap);
+		
+		String deviceState = (String) jsonMap.get("status");
+		Boolean result = Boolean.FALSE;
+		if (!deviceState.equals("success")) {
+			throw new IllegalStateException("Could not turn on device with id: " + deviceId);
+		}
 	}
 
 }

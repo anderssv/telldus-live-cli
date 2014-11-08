@@ -42,7 +42,8 @@ public class App {
 				String deviceId = (String) result.get("<device_id>");
 				this.repository.turnDeviceOn(deviceId);
 			} else {
-				
+				String deviceId = (String) result.get("<device_id>");
+				this.repository.turnDeviceOff(deviceId);
 			}
 		}
 		

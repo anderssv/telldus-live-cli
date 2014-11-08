@@ -15,10 +15,19 @@ public class MapNavigationWrapper {
 	}
 
 	public Object get(String path) {		
+		Object result = this.check(path);
+		if (result == null) {
+			throw new IllegalArgumentException("Could not find value for '" + path + "' in map " + this.map.toString());
+		}
+		return result;
+	}
+	
+	public Object check(String path) {
 		Queue<ItemSelector> selectors = parsePath(path);
 		
 		return recurse(map, selectors);
 	}
+	
 	
 	private Queue<ItemSelector> parsePath(String path) {
 		Queue<ItemSelector> selectors = new LinkedList<>();

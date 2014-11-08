@@ -9,8 +9,6 @@ import org.junit.Test;
 
 public class CommandLineTest {
 
-	private static String DEVICE_ID = "444444";
-
 	public static App createTestApplication() {
 		Boolean stubbing = Boolean.FALSE;
 		String stubEnvSetting = System.getenv("TELLDUS_CLI_STUB");
@@ -30,7 +28,7 @@ public class CommandLineTest {
 	@Test
 	public void shouldPassCommandLineChecksForDeviceOn() throws IOException {
 		int returnCode = createTestApplication().handleCommandLine(
-				new String[] { "device", "on", DEVICE_ID });
+				new String[] { "device", "on", deviceId() });
 		assertEquals(0, returnCode);
 	}
 
@@ -48,6 +46,16 @@ public class CommandLineTest {
 		String deviceId = deviceId();
 		application
 				.handleCommandLine(new String[] { "device", "on", deviceId });
+		assertTrue(application.getDeviceState(deviceId));
+	}
+
+	@Test
+	public void shouldTurnOffDevice() throws IOException {
+		App application = createTestApplication();
+
+		String deviceId = deviceId();
+		application
+				.handleCommandLine(new String[] { "device", "off", deviceId });
 		assertTrue(application.getDeviceState(deviceId));
 	}
 

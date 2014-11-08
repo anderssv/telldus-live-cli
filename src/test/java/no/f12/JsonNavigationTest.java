@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,15 @@ public class JsonNavigationTest {
 		assertNotNull(jsonMap.get("device[id=2]"));
 		assertTrue(jsonMap.get("device[id=2]") instanceof Map);
 		assertTrue(((Map) jsonMap.get("device[id=2]")).get("id").equals("2"));
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void shouldThrowExceptionOnInvalidPath() throws IOException {
+		String json = FileUtil.readClassPathFile(this.getClass(), "device-list.json");
+		
+		MapNavigationWrapper jsonMap = JsonParser.parseJson(json);
+		jsonMap.get("nononono");
+		
 	}
 	
 	
