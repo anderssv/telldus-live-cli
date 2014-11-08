@@ -38,12 +38,13 @@ public class App {
 		} else if ((Boolean) result.get("--help")) {
 			print(usage);
 		} else if ((Boolean) result.get("device")) {
+			String deviceId = (String) result.get("<device_id>");
 			if ((Boolean) result.get("on")) {
-				String deviceId = (String) result.get("<device_id>");
 				this.repository.turnDeviceOn(deviceId);
-			} else {
-				String deviceId = (String) result.get("<device_id>");
+			} else if((Boolean) result.get("off")) {
 				this.repository.turnDeviceOff(deviceId);
+			} else if ((Boolean) result.get("status")) {
+				System.out.println(this.repository.getDeviceState(deviceId));
 			}
 		}
 		

@@ -50,6 +50,15 @@ public class CommandLineTest {
 	}
 
 	@Test
+	public void shouldGiveStatusForDevice() throws IOException {
+		App application = createTestApplication();
+
+		String deviceId = deviceId();
+		application
+				.handleCommandLine(new String[] { "device", "status", deviceId });
+	}
+	
+	@Test
 	public void shouldTurnOffDevice() throws IOException {
 		App application = createTestApplication();
 
