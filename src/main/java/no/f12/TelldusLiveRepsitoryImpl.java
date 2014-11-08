@@ -16,60 +16,86 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 
 	@Override
-	public List<Device> getDevices() {
-		OAuthRequest request = createAndSignRequest("devices/list", null);
-		Response response = request.send();
-
-		MapNavigationWrapper jsonMap = parseJson(response.getBody());
-		
-		List<Map> deviceMaps = (List<Map>) jsonMap.get("device");
-		List<MapNavigationWrapper> deviceMapList = new ArrayList<>();
-		for (Map deviceMap : deviceMaps) {
-			deviceMapList.add(new MapNavigationWrapper(deviceMap));
-		}
-		
-		List<Device> devices = new ArrayList<>();
-		for (MapNavigationWrapper deviceMap: deviceMapList) {
-			devices.add(new Device(Integer.getInteger((String) deviceMap.get("id"))));
-		}
-		
-		return devices;
+	public void turnDeviceOn(String deviceId) {
+		new TelldusCommandTemplate(this).execute("device/turnOn", deviceId,
+				new CommandCallback<String>() {
+					@Override
+					public String doCommand(MapNavigationWrapper jsonMap) {
+						this.verifySuccess(jsonMap, deviceId, "turn on");
+						return "";
+					}
+				});
 	}
-	
+
+	@Override
+	public void turnDeviceOff(String deviceId) {
+		new TelldusCommandTemplate(this).execute("device/turnOff", deviceId,
+				new CommandCallback<String>() {
+					@Override
+					public String doCommand(MapNavigationWrapper jsonMap) {
+						this.verifySuccess(jsonMap, deviceId, "turn off");
+						return "";
+					}
+				});
+	}
+
+	@Override
+	public List<Device> getDevices() {
+		return new TelldusCommandTemplate(this).query("devices/list",
+				new CommandCallback<List<Device>>() {
+					@Override
+					public List<Device> doCommand(MapNavigationWrapper jsonMap) {
+						List<Map> deviceMaps = (List<Map>) jsonMap
+								.get("device");
+						List<MapNavigationWrapper> deviceMapList = new ArrayList<>();
+						for (Map deviceMap : deviceMaps) {
+							deviceMapList.add(new MapNavigationWrapper(
+									deviceMap));
+						}
+
+						List<Device> devices = new ArrayList<>();
+						for (MapNavigationWrapper deviceMap : deviceMapList) {
+							devices.add(new Device(Integer
+									.getInteger((String) deviceMap.get("id"))));
+						}
+
+						return devices;
+					}
+				});
+	}
+
 	@Override
 	public Boolean getDeviceState(String id) {
 		Map<String, String> params = new HashMap<>();
 		params.put("id", id);
 		params.put("supportedMethods", "1");
-		OAuthRequest request = this.createAndSignRequest("device/info",
-				params);
-		Response response = request.send();
-
-		MapNavigationWrapper jsonMap = parseJson(response.getBody());
-		assertOk(response, jsonMap);
 		
-		String deviceState = (String) jsonMap.get("state");
-		Boolean result = Boolean.FALSE;
-		if (deviceState.equals("1")) {
-			result = Boolean.TRUE;
-		}
-		
-		return result;
+		return new TelldusCommandTemplate(this).execute("device/info", params, new CommandCallback<Boolean>() {
+			@Override
+			public Boolean doCommand(MapNavigationWrapper jsonMap) {
+				String deviceState = (String) jsonMap.get("state");
+				Boolean result = Boolean.FALSE;
+				if (deviceState.equals("1")) {
+					result = Boolean.TRUE;
+				}
+				
+				return result;
+			}
+		});
 	}
-
-
 
 	private void assertOk(Response response, MapNavigationWrapper jsonMap) {
-		if (!"HTTP/1.1 200 OK".equals(response.getHeader(null)) || response.getBody() == null || jsonMap.check("error") != null) {
-			throw new RuntimeException("Result from server is nok ok! Header: " + response.getHeaders() + " --- Result: " + jsonMap.toString());
+		if (!"HTTP/1.1 200 OK".equals(response.getHeader(null))
+				|| response.getBody() == null || jsonMap.check("error") != null) {
+			throw new RuntimeException("Result from server is nok ok! Header: "
+					+ response.getHeaders() + " --- Result: "
+					+ jsonMap.toString());
 		}
 	}
-	
+
 	public OAuthRequest createAndSignRequest(String url,
 			Map<String, String> parameters) {
 
@@ -101,8 +127,9 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 				.apiKey(publicKey).apiSecret(secretKey).build();
 		return oService;
 	}
-	
-	private OAuthRequest createRequest(String url, Map<String, String> parameters) {
+
+	private OAuthRequest createRequest(String url,
+			Map<String, String> parameters) {
 		// Create, sign and send request.
 		OAuthRequest request = new OAuthRequest(Verb.GET, telldusUrl(url));
 
@@ -117,39 +144,8 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 		return request;
 	}
 
-
 	private String telldusUrl(String extension) {
 		return "http://api.telldus.com/json/" + extension;
 	}
 
-	private Map<String, String> idMap(String deviceId) {
-		Map<String, String> idParam = new HashMap<String, String>();
-		if (deviceId != null) {
-			idParam.put("id", deviceId);
-		}
-		return idParam;
-	}
-
-	@Override
-	public void turnDeviceOn(String deviceId) {
-		new TelldusCommandTemplate(this).execute("device/turnOn", deviceId, new CommandCallback<String>() {
-			@Override
-			public String doCommand(MapNavigationWrapper jsonMap) {
-				this.verifySuccess(jsonMap, deviceId, "turn on");
-				return "";
-			}
-		});
-	}
-
-	@Override
-	public void turnDeviceOff(String deviceId) {
-		new TelldusCommandTemplate(this).execute("device/turnOff", deviceId, new CommandCallback<String>() {
-			@Override
-			public String doCommand(MapNavigationWrapper jsonMap) {
-				this.verifySuccess(jsonMap, deviceId, "turn off");
-				return "";
-			}
-		});
-	}
-	
 }

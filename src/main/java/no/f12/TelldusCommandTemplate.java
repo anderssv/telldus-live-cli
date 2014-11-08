@@ -16,17 +16,35 @@ public class TelldusCommandTemplate {
 		this.repo = repo;
 	}
 
+	public <T> T query(String resourceUrl, CommandCallback<T> callback) {
+		MapNavigationWrapper jsonMap = performRequest(resourceUrl, new HashMap<>());
+		
+		return callback.doCommand(jsonMap);
+	}
+	
+	public <T> T execute(String resourceUrl, Map<String, String> parameters, CommandCallback<T> callback) {
+		MapNavigationWrapper jsonMap = performRequest(resourceUrl, parameters);
+
+		return callback.doCommand(jsonMap);
+	}
+
+	
 	public <T> T execute(String resourceUrl, String deviceId, CommandCallback<T> callback) {
 		Map<String, String> params = new HashMap<>();
 		params.put("id", deviceId);
+
+		return this.execute(resourceUrl, params, callback);
+	}
+
+	private MapNavigationWrapper performRequest(String resourceUrl,
+			Map<String, String> params) {
 		OAuthRequest request = this.repo.createAndSignRequest(resourceUrl,
 				params);
 		Response response = request.send();
 
 		MapNavigationWrapper jsonMap = parseJson(response.getBody());
 		assertOk(response, jsonMap);
-
-		return callback.doCommand(jsonMap);
+		return jsonMap;
 	}
 	
 	private void assertOk(Response response, MapNavigationWrapper jsonMap) {
