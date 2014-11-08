@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.scribe.model.OAuthRequest;
+import org.scribe.model.Response;
+
+import static org.mockito.Mockito.*;
 
 public class TelldusLiveRepositoryStub implements TelldusRepository {
 
@@ -18,8 +21,14 @@ public class TelldusLiveRepositoryStub implements TelldusRepository {
 
 	@Override
 	public OAuthRequest createAndSignRequest(String string, Map<String, String> params) {
-		// TODO Auto-generated method stub
-		return null;
+		OAuthRequest request = mock(OAuthRequest.class);
+		Response response = mock(Response.class);
+		
+		when(request.send()).thenReturn(response);
+		when(response.getHeader(null)).thenReturn("HTTP/1.1 200 OK");
+		when(response.getBody()).thenReturn("");
+		
+		return request;
 	}
 
 	@Override

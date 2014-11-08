@@ -76,19 +76,36 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 	public OAuthRequest createAndSignRequest(String url,
 			Map<String, String> parameters) {
 
+		OAuthRequest request = createRequest(url, parameters);
+
 		Properties props = FileUtil.readPropertyFile();
 
-		String publicKey = props.getProperty("telldus.api.key.public");
-		String secretKey = props.getProperty("telldus.api.key.secret");
+		OAuthService oService = createAuthService(props);
+		Token accessToken = createAccessToken(props);
 
+		oService.signRequest(accessToken, request);
+
+		return request;
+	}
+
+	private Token createAccessToken(Properties props) {
 		String publicToken = props.getProperty("telldus.api.token.public");
 		String secretToken = props.getProperty("telldus.api.token.secret");
 
+		Token accessToken = new Token(publicToken, secretToken);
+		return accessToken;
+	}
+
+	private OAuthService createAuthService(Properties props) {
+		String publicKey = props.getProperty("telldus.api.key.public");
+		String secretKey = props.getProperty("telldus.api.key.secret");
+
 		OAuthService oService = new ServiceBuilder().provider(GoogleApi.class)
 				.apiKey(publicKey).apiSecret(secretKey).build();
-
-		Token accessToken = new Token(publicToken, secretToken);
-
+		return oService;
+	}
+	
+	private OAuthRequest createRequest(String url, Map<String, String> parameters) {
 		// Create, sign and send request.
 		OAuthRequest request = new OAuthRequest(Verb.GET, telldusUrl(url));
 
@@ -99,8 +116,6 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 				request.addQuerystringParameter(parameterName, parameterValue);
 			}
 		}
-
-		oService.signRequest(accessToken, request);
 
 		return request;
 	}
