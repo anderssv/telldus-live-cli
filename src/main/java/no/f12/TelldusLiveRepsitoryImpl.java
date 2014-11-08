@@ -132,38 +132,24 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 
 	@Override
 	public void turnDeviceOn(String deviceId) {
-		Map<String, String> params = new HashMap<>();
-		params.put("id", deviceId);
-		OAuthRequest request = this.createAndSignRequest("device/turnOn",
-				params);
-		Response response = request.send();
-
-		MapNavigationWrapper jsonMap = parseJson(response.getBody());
-		assertOk(response, jsonMap);
-		
-		String deviceState = (String) jsonMap.get("status");
-		Boolean result = Boolean.FALSE;
-		if (!deviceState.equals("success")) {
-			throw new IllegalStateException("Could not turn on device with id: " + deviceId);
-		}
+		new TelldusCommandTemplate(this).execute("device/turnOn", deviceId, new CommandCallback<String>() {
+			@Override
+			public String doCommand(MapNavigationWrapper jsonMap) {
+				this.verifySuccess(jsonMap, deviceId, "turn on");
+				return "";
+			}
+		});
 	}
 
 	@Override
 	public void turnDeviceOff(String deviceId) {
-		Map<String, String> params = new HashMap<>();
-		params.put("id", deviceId);
-		OAuthRequest request = this.createAndSignRequest("device/turnOff",
-				params);
-		Response response = request.send();
-
-		MapNavigationWrapper jsonMap = parseJson(response.getBody());
-		assertOk(response, jsonMap);
-		
-		String deviceState = (String) jsonMap.get("status");
-		Boolean result = Boolean.FALSE;
-		if (!deviceState.equals("success")) {
-			throw new IllegalStateException("Could not turn on device with id: " + deviceId);
-		}
+		new TelldusCommandTemplate(this).execute("device/turnOff", deviceId, new CommandCallback<String>() {
+			@Override
+			public String doCommand(MapNavigationWrapper jsonMap) {
+				this.verifySuccess(jsonMap, deviceId, "turn off");
+				return "";
+			}
+		});
 	}
-
+	
 }
