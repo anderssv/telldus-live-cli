@@ -56,11 +56,12 @@ public class CommandLineTest {
 		App application = createTestApplication();
 
 		String deviceId = deviceId();
-		application.handleCommandLine(new String[] {"device", "on", deviceId});
 		application
-				.handleCommandLine(new String[] { "device", "status", deviceId });
+				.handleCommandLine(new String[] { "device", "on", deviceId });
+		application.handleCommandLine(new String[] { "device", "status",
+				deviceId });
 	}
-	
+
 	@Test
 	public void shouldTurnOffDevice() throws IOException, InterruptedException {
 		App application = createTestApplication();
