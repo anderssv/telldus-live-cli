@@ -47,7 +47,7 @@ public class CommandLineTest {
 		String deviceId = deviceId();
 		application
 				.handleCommandLine(new String[] { "device", "on", deviceId });
-		Thread.sleep(4000);
+		Thread.sleep(1000);
 		assertTrue(application.getDeviceState(deviceId));
 	}
 
@@ -67,7 +67,7 @@ public class CommandLineTest {
 		String deviceId = deviceId();
 		application
 				.handleCommandLine(new String[] { "device", "off", deviceId });
-		Thread.sleep(4000);
+		Thread.sleep(1000);
 		assertFalse(application.getDeviceState(deviceId));
 	}
 
