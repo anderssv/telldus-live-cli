@@ -56,6 +56,7 @@ public class CommandLineTest {
 		App application = createTestApplication();
 
 		String deviceId = deviceId();
+		application.handleCommandLine(new String[] {"device", "on", deviceId});
 		application
 				.handleCommandLine(new String[] { "device", "status", deviceId });
 	}
