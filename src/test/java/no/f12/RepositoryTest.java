@@ -55,7 +55,7 @@ public class RepositoryTest {
 	private void assertNotOk(Response response) {
 		assertEquals("HTTP/1.1 200 OK", response.getHeader(null));
 		assertTrue(response.getBody(), response.getBody()
-				.contains("not found!"));
+				.contains("You do not own"));
 	}
 
 }

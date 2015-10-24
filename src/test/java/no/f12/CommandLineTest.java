@@ -1,6 +1,7 @@
 package no.f12;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -40,12 +41,13 @@ public class CommandLineTest {
 	}
 
 	@Test
-	public void shouldTurnOnDevice() throws IOException {
+	public void shouldTurnOnDevice() throws IOException, InterruptedException {
 		App application = createTestApplication();
 
 		String deviceId = deviceId();
 		application
 				.handleCommandLine(new String[] { "device", "on", deviceId });
+		Thread.sleep(4000);
 		assertTrue(application.getDeviceState(deviceId));
 	}
 
@@ -59,13 +61,14 @@ public class CommandLineTest {
 	}
 	
 	@Test
-	public void shouldTurnOffDevice() throws IOException {
+	public void shouldTurnOffDevice() throws IOException, InterruptedException {
 		App application = createTestApplication();
 
 		String deviceId = deviceId();
 		application
 				.handleCommandLine(new String[] { "device", "off", deviceId });
-		assertTrue(application.getDeviceState(deviceId));
+		Thread.sleep(4000);
+		assertFalse(application.getDeviceState(deviceId));
 	}
 
 	private String deviceId() {
