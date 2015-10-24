@@ -1,10 +1,12 @@
 package no.f12;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
 public class MapNavigationWrapper {
 
@@ -40,13 +42,7 @@ public class MapNavigationWrapper {
 		ItemSelector currentSelector = selectors.poll();
 		
 		if (currentSelector != null) {
-			Object nextLevel = currentSelector.select(currentLevel);
-			
-			if (nextLevel instanceof Map || nextLevel instanceof List) {
-				return recurse(nextLevel, selectors);
-			}
-			
-			return nextLevel;
+			return currentSelector.select(currentLevel);
 		}
 		
 		return currentLevel;
@@ -76,20 +72,32 @@ public class MapNavigationWrapper {
 
 		public Object select(Object currentLevel) {
 			Object workingLevel = currentLevel;
+			
 			if (workingLevel instanceof Map) {
 				workingLevel = ((Map) workingLevel).get(this.item);
-			}
-			
-			if (workingLevel instanceof List && this.selectorAttribute != null) {
-				List<Map> searchList = (List) workingLevel;
-				for (Map listElement : searchList) {
-					if (listElement.get(this.selectorAttribute).equals(this.selectorValue)) {
-						workingLevel = listElement;
-						break;
+				if (workingLevel instanceof List) {
+					if (this.index != null) {
+						return ((List) workingLevel).get(this.index);
+					} else if (this.selectorAttribute != null && this.selectorValue != null) {
+						for (Object itemValues : (List) workingLevel) {
+							Map itemMap = (Map) itemValues;
+							if (itemMap.get(this.selectorAttribute).equals(this.selectorValue)) {
+								return itemMap;
+							}
+						}
 					}
 				}
-			} else if (workingLevel instanceof List && this.index != null) {
-				workingLevel = ((List) workingLevel).get(this.index);
+				return workingLevel;
+			} else if (workingLevel instanceof List) {
+				if (this.selectorAttribute != null) {
+					List<Map> searchList = (List) workingLevel;
+					for (Map listElement : searchList) {
+						if (listElement.get(this.selectorAttribute).equals(this.selectorValue)) {
+							return listElement;
+						}
+					}
+				}
+
 			}
 			
 			return workingLevel;
@@ -122,6 +130,16 @@ public class MapNavigationWrapper {
 	public String toString() {
 		return map.toString();
 	}
+
+	public Map<String, String> getMap(String keyPath, String valuePath) {
+		Queue<ItemSelector> keySelectors = parsePath(keyPath);
+		
+		recurse(this.map, keySelectors);
+		
+		
+		return new HashMap<String, String>();
+	}
+
 	
 	
 	

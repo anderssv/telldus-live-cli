@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class CommandLineTest {
@@ -29,7 +30,7 @@ public class CommandLineTest {
 	@Test
 	public void shouldPassCommandLineChecksForDeviceOn() throws IOException {
 		int returnCode = createTestApplication().handleCommandLine(
-				new String[] { "device", "on", deviceId() });
+				new String[] { "switch", "on", deviceId() });
 		assertEquals(0, returnCode);
 	}
 
@@ -46,8 +47,8 @@ public class CommandLineTest {
 
 		String deviceId = deviceId();
 		application
-				.handleCommandLine(new String[] { "device", "on", deviceId });
-		Thread.sleep(1000);
+				.handleCommandLine(new String[] { "switch", "on", deviceId });
+		Thread.sleep(2000);
 		assertTrue(application.getDeviceState(deviceId));
 	}
 
@@ -57,8 +58,8 @@ public class CommandLineTest {
 
 		String deviceId = deviceId();
 		application
-				.handleCommandLine(new String[] { "device", "on", deviceId });
-		application.handleCommandLine(new String[] { "device", "status",
+				.handleCommandLine(new String[] { "switch", "on", deviceId });
+		application.handleCommandLine(new String[] { "switch", "status",
 				deviceId });
 	}
 
@@ -68,9 +69,25 @@ public class CommandLineTest {
 
 		String deviceId = deviceId();
 		application
-				.handleCommandLine(new String[] { "device", "off", deviceId });
-		Thread.sleep(1000);
+				.handleCommandLine(new String[] { "switch", "off", deviceId });
+		Thread.sleep(2000);
 		assertFalse(application.getDeviceState(deviceId));
+	}
+	
+	@Test
+	@Ignore
+	public void shouldGetSensorValues() throws IOException {
+		App application = createTestApplication();
+
+		String deviceId = sensorId();
+		application
+				.handleCommandLine(new String[] { "sensor", deviceId });
+		assertTrue(application.getDeviceState(deviceId));		
+	}
+
+	private String sensorId() {
+		return FileUtil.readPropertyFile().getProperty(
+				"telldus.api.test.sensor");
 	}
 
 	private String deviceId() {

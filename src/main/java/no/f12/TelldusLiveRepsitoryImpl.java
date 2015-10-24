@@ -137,4 +137,22 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 		return "http://api.telldus.com/json/" + extension;
 	}
 
+	@Override
+	public Map<String, String> getSensorValues(String deviceId) {
+		Map<String, String> params = new HashMap<>();
+		params.put("includeValues", "1");
+
+		Map<String, String> sensorValues = new TelldusCommandTemplate(this).execute("sensors/list", params,
+				new CommandCallback<Map<String, String>>() {
+					@Override
+					public Map<String, String> doCommand(MapNavigationWrapper jsonMap) {
+						Map<String, String> temperatureValues = jsonMap.getMap("sensor.id", "sensor.temp");
+						
+						return temperatureValues;
+					}
+				});
+		
+		return sensorValues;
+	}
+
 }

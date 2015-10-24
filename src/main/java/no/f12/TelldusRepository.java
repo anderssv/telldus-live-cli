@@ -17,4 +17,6 @@ public interface TelldusRepository {
 
 	void turnDeviceOff(String deviceId);
 
+	Map<String, String> getSensorValues(String deviceId);
+
 }

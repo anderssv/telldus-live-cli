@@ -37,15 +37,21 @@ public class App {
 			return 1;
 		} else if ((Boolean) result.get("--help")) {
 			print(usage);
-		} else if ((Boolean) result.get("device")) {
+		} else if ((Boolean) result.get("switch")) {
 			String deviceId = (String) result.get("<device_id>");
 			if ((Boolean) result.get("on")) {
 				this.repository.turnDeviceOn(deviceId);
 			} else if((Boolean) result.get("off")) {
 				this.repository.turnDeviceOff(deviceId);
 			} else if ((Boolean) result.get("status")) {
-				System.out.println(this.repository.getDeviceState(deviceId));
+				System.out.println(this.getDeviceState(deviceId));
 			}
+		} else if ((Boolean) result.get("sensor")) {
+			String deviceId = (String) result.get("<device_id>");
+			this.repository.getSensorValues(deviceId);
+			
+		} else {
+			throw new IllegalArgumentException("Don't know what to do with that command line:" + result);
 		}
 		
 		return 0;

@@ -49,4 +49,9 @@ public class TelldusLiveRepositoryStub implements TelldusRepository {
 		this.deviceStates.put(deviceId, "false");
 	}
 
+	@Override
+	public Map<String, String> getSensorValues(String deviceId) {
+		throw new IllegalStateException();
+	}
+
 }
