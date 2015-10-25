@@ -79,6 +79,8 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 					}
 				});
 	}
+	
+	
 
 	public OAuthRequest createAndSignRequest(String url,
 			Map<String, String> parameters) {
@@ -133,7 +135,7 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 	}
 
 	@Override
-	public Map<String, String> getSensorValues(String deviceId) {
+	public String getSensorValues(String deviceId) {
 		Map<String, String> params = new HashMap<>();
 		params.put("includeValues", "1");
 
@@ -144,19 +146,19 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 							public Map<String, String> doCommand(
 									JsonNavigator jsonMap) {
 								List<Map<String, String>> sensors = jsonMap
-										.findAll("$..sensor");
+										.findAll("$.sensor");
 
 								Map<String, String> temperatureValues = new HashMap<String, String>();
 								for (Map<String, String> sensor : sensors) {
 									temperatureValues.put(sensor.get("id"),
-											sensor.get("temperature"));
+											sensor.get("temp"));
 								}
 
 								return temperatureValues;
 							}
 						});
 
-		return sensorValues;
+		return sensorValues.get(deviceId);
 	}
 
 }

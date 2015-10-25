@@ -30,28 +30,28 @@ public class App {
 	public int handleCommandLine(String[] args) throws IOException {
 		String usage = FileUtil.readClassPathFile(App.class, "usage.txt");
 		@SuppressWarnings("unchecked")
-		AbstractMap<String, Object> result = clj.docopt(usage, args);
+		AbstractMap<String, Object> doResult = clj.docopt(usage, args);
 
-		if (result == null) {
+		if (doResult == null) {
 			print(usage);
 			return 1;
-		} else if ((Boolean) result.get("--help")) {
+		} else if ((Boolean) doResult.get("--help")) {
 			print(usage);
-		} else if ((Boolean) result.get("switch")) {
-			String deviceId = (String) result.get("<device_id>");
-			if ((Boolean) result.get("on")) {
+		} else if ((Boolean) doResult.get("switch")) {
+			String deviceId = (String) doResult.get("<device_id>");
+			if ((Boolean) doResult.get("on")) {
 				this.repository.turnDeviceOn(deviceId);
-			} else if((Boolean) result.get("off")) {
+			} else if((Boolean) doResult.get("off")) {
 				this.repository.turnDeviceOff(deviceId);
-			} else if ((Boolean) result.get("status")) {
+			} else if ((Boolean) doResult.get("status")) {
 				System.out.println(this.getDeviceState(deviceId));
 			}
-		} else if ((Boolean) result.get("sensor")) {
-			String deviceId = (String) result.get("<device_id>");
+		} else if ((Boolean) doResult.get("sensor")) {
+			String deviceId = (String) doResult.get("<device_id>");
 			this.repository.getSensorValues(deviceId);
 			
 		} else {
-			throw new IllegalArgumentException("Don't know what to do with that command line:" + result);
+			throw new IllegalArgumentException("Don't know what to do with that command line:" + doResult);
 		}
 		
 		return 0;

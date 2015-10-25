@@ -50,8 +50,8 @@ public class TelldusLiveRepositoryStub implements TelldusRepository {
 	}
 
 	@Override
-	public Map<String, String> getSensorValues(String deviceId) {
-		throw new IllegalStateException();
+	public String getSensorValues(String deviceId) {
+		return "10";
 	}
 
 }

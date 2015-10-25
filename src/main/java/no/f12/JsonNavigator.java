@@ -29,5 +29,9 @@ public class JsonNavigator {
 			return Boolean.FALSE;
 		}
 	}
+	
+	public String toString() {
+		return this.json;
+	}
 
 }
