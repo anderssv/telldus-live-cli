@@ -5,10 +5,6 @@ import java.util.AbstractMap;
 
 import org.docopt.clj;
 
-/**
- * Hello world!
- *
- */
 public class App {
 
 	private TelldusRepository repository;
@@ -44,12 +40,12 @@ public class App {
 			} else if((Boolean) doResult.get("off")) {
 				this.repository.turnDeviceOff(deviceId);
 			} else if ((Boolean) doResult.get("status")) {
-				System.out.println(this.getDeviceState(deviceId));
+				print("Device " + deviceId + " state: " + this.getDeviceState(deviceId));
 			}
 		} else if ((Boolean) doResult.get("sensor")) {
-			String deviceId = (String) doResult.get("<device_id>");
-			this.repository.getSensorValues(deviceId);
-			
+			String deviceId = (String) doResult.get("<sensor_id>");
+			String temperature = this.repository.getSensorValues(deviceId);
+			print("Sensor " + deviceId + " temperature: " + temperature);
 		} else {
 			throw new IllegalArgumentException("Don't know what to do with that command line:" + doResult);
 		}
