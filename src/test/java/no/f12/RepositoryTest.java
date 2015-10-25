@@ -31,7 +31,7 @@ public class RepositoryTest {
 		TelldusRepository repo = new TelldusLiveRepsitoryImpl();
 
 		Map<String, String> params = new HashMap<>();
-		params.put("id", this.DEVICE_MISSING);
+		params.put("id", RepositoryTest.DEVICE_MISSING);
 		OAuthRequest request = repo.createAndSignRequest("device/turnOn",
 				params);
 		Response response = request.send();

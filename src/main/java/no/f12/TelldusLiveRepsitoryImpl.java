@@ -45,14 +45,14 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 				new CommandCallback<List<Device>>() {
 					@Override
 					public List<Device> doCommand(JsonNavigator jsonMap) {
-						List<String> deviceIds = (List<String>) jsonMap
-								.get("$.device[*].id");
+						List<String> deviceIds = jsonMap
+								.findAll("$.device[*].id");
 
 						List<Device> devices = new ArrayList<>();
-						for (String devideId: deviceIds) {
+						for (String devideId : deviceIds) {
 							devices.add(new Device(Integer.parseInt(devideId)));
 						}
-						
+
 						return devices;
 					}
 				});
@@ -68,7 +68,8 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 				new CommandCallback<Boolean>() {
 					@Override
 					public Boolean doCommand(JsonNavigator jsonMap) {
-						String deviceState = (String) jsonMap.get("$.state");
+						String deviceState = (String) jsonMap.get("$.state",
+								String.class);
 						Boolean result = Boolean.FALSE;
 						if (deviceState.equals("1")) {
 							result = Boolean.TRUE;
@@ -136,21 +137,25 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 		Map<String, String> params = new HashMap<>();
 		params.put("includeValues", "1");
 
-		Map<String, String> sensorValues = new TelldusCommandTemplate(this).execute("sensors/list", params,
-				new CommandCallback<Map<String, String>>() {
-					@Override
-					public Map<String, String> doCommand(JsonNavigator jsonMap) {
-						List<Map> sensors = (List<Map>) jsonMap.get("$..sensor");
-						
-						Map<String, String> temperatureValues = new HashMap<String, String>();
-						for (Map<String, String> sensor: sensors) {
-							temperatureValues.put(sensor.get("id"), sensor.get("temperature"));
-						}
-						
-						return temperatureValues;
-					}
-				});
-		
+		Map<String, String> sensorValues = new TelldusCommandTemplate(this)
+				.execute("sensors/list", params,
+						new CommandCallback<Map<String, String>>() {
+							@Override
+							public Map<String, String> doCommand(
+									JsonNavigator jsonMap) {
+								List<Map<String, String>> sensors = jsonMap
+										.findAll("$..sensor");
+
+								Map<String, String> temperatureValues = new HashMap<String, String>();
+								for (Map<String, String> sensor : sensors) {
+									temperatureValues.put(sensor.get("id"),
+											sensor.get("temperature"));
+								}
+
+								return temperatureValues;
+							}
+						});
+
 		return sensorValues;
 	}
 
