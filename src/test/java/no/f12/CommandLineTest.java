@@ -70,7 +70,7 @@ public class CommandLineTest {
 		String deviceId = deviceId();
 		application
 				.handleCommandLine(new String[] { "switch", "off", deviceId });
-		Thread.sleep(2000);
+		Thread.sleep(3000);
 		assertFalse(application.getDeviceState(deviceId));
 	}
 	

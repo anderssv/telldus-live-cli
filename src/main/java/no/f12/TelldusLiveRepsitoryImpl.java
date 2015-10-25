@@ -20,7 +20,7 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 		new TelldusCommandTemplate(this).execute("device/turnOn", deviceId,
 				new CommandCallback<String>() {
 					@Override
-					public String doCommand(MapNavigationWrapper jsonMap) {
+					public String doCommand(JsonNavigator jsonMap) {
 						this.verifySuccess(jsonMap, deviceId, "turn on");
 						return "";
 					}
@@ -32,7 +32,7 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 		new TelldusCommandTemplate(this).execute("device/turnOff", deviceId,
 				new CommandCallback<String>() {
 					@Override
-					public String doCommand(MapNavigationWrapper jsonMap) {
+					public String doCommand(JsonNavigator jsonMap) {
 						this.verifySuccess(jsonMap, deviceId, "turn off");
 						return "";
 					}
@@ -44,21 +44,15 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 		return new TelldusCommandTemplate(this).query("devices/list",
 				new CommandCallback<List<Device>>() {
 					@Override
-					public List<Device> doCommand(MapNavigationWrapper jsonMap) {
-						List<Map> deviceMaps = (List<Map>) jsonMap
-								.get("device");
-						List<MapNavigationWrapper> deviceMapList = new ArrayList<>();
-						for (Map deviceMap : deviceMaps) {
-							deviceMapList.add(new MapNavigationWrapper(
-									deviceMap));
-						}
+					public List<Device> doCommand(JsonNavigator jsonMap) {
+						List<String> deviceIds = (List<String>) jsonMap
+								.get("$.device[*].id");
 
 						List<Device> devices = new ArrayList<>();
-						for (MapNavigationWrapper deviceMap : deviceMapList) {
-							devices.add(new Device(Integer
-									.getInteger((String) deviceMap.get("id"))));
+						for (String devideId: deviceIds) {
+							devices.add(new Device(Integer.parseInt(devideId)));
 						}
-
+						
 						return devices;
 					}
 				});
@@ -73,8 +67,8 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 		return new TelldusCommandTemplate(this).execute("device/info", params,
 				new CommandCallback<Boolean>() {
 					@Override
-					public Boolean doCommand(MapNavigationWrapper jsonMap) {
-						String deviceState = (String) jsonMap.get("state");
+					public Boolean doCommand(JsonNavigator jsonMap) {
+						String deviceState = (String) jsonMap.get("$.state");
 						Boolean result = Boolean.FALSE;
 						if (deviceState.equals("1")) {
 							result = Boolean.TRUE;
@@ -145,8 +139,13 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 		Map<String, String> sensorValues = new TelldusCommandTemplate(this).execute("sensors/list", params,
 				new CommandCallback<Map<String, String>>() {
 					@Override
-					public Map<String, String> doCommand(MapNavigationWrapper jsonMap) {
-						Map<String, String> temperatureValues = jsonMap.getMap("sensor.id", "sensor.temp");
+					public Map<String, String> doCommand(JsonNavigator jsonMap) {
+						List<Map> sensors = (List<Map>) jsonMap.get("$..sensor");
+						
+						Map<String, String> temperatureValues = new HashMap<String, String>();
+						for (Map<String, String> sensor: sensors) {
+							temperatureValues.put(sensor.get("id"), sensor.get("temperature"));
+						}
 						
 						return temperatureValues;
 					}
