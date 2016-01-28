@@ -5,6 +5,9 @@ import java.util.AbstractMap;
 
 import org.docopt.clj;
 
+import no.f12.telldus.live.api.TelldusLiveRepsitoryImpl;
+import no.f12.telldus.live.api.TelldusRepository;
+
 public class App {
 
 	private TelldusRepository repository;

@@ -1,4 +1,6 @@
-package no.f12;
+package no.f12.telldus.live.api;
+
+import no.f12.JsonNavigator;
 
 public abstract class CommandCallback<T> {
 	abstract T doCommand(JsonNavigator result);

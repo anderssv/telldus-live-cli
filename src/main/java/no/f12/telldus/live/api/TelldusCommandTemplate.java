@@ -1,10 +1,12 @@
-package no.f12;
+package no.f12.telldus.live.api;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
+
+import no.f12.JsonNavigator;
 
 public class TelldusCommandTemplate {
 

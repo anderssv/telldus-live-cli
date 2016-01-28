@@ -1,4 +1,4 @@
-package no.f12;
+package no.f12.telldus.live.api;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import no.f12.FileUtil;
+import no.f12.JsonNavigator;
 import no.f12.telldus.live.domain.Device;
 import no.f12.telldus.live.domain.DeviceEvent;
 

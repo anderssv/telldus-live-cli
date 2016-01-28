@@ -8,6 +8,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import no.f12.telldus.live.api.TelldusLiveRepsitoryImpl;
+import no.f12.telldus.live.api.TelldusRepository;
+
 public class CommandLineTest {
 
 	public static App createTestApplication() {

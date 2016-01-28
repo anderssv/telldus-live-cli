@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import no.f12.telldus.live.api.TelldusRepository;
 import no.f12.telldus.live.domain.Device;
 import no.f12.telldus.live.domain.DeviceEvent;
 
