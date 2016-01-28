@@ -3,6 +3,9 @@ package no.f12;
 import java.util.List;
 import java.util.Map;
 
+import no.f12.telldus.live.domain.Device;
+import no.f12.telldus.live.domain.DeviceEvent;
+
 import org.scribe.model.OAuthRequest;
 
 public interface TelldusRepository {
@@ -18,5 +21,7 @@ public interface TelldusRepository {
 	void turnDeviceOff(String deviceId);
 
 	String getSensorValues(String deviceId);
+
+	List<DeviceEvent> getDeviceHistory(String deviceId);
 
 }

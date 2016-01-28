@@ -1,4 +1,4 @@
-package no.f12;
+package no.f12.telldus.live.domain;
 
 public class Device {
 

@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import no.f12.telldus.live.domain.Device;
+import no.f12.telldus.live.domain.DeviceEvent;
+
 import org.junit.Test;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
@@ -45,6 +48,14 @@ public class RepositoryTest {
 		List<Device> devices = repo.getDevices();
 		assertNotNull(devices);
 		assertTrue(devices.size() > 0);
+	}
+	
+	@Test
+	public void shouldRetrieveHistory() {
+		TelldusRepository repo = new TelldusLiveRepsitoryImpl();
+		List<DeviceEvent> events = repo.getDeviceHistory(CommandLineTest.deviceId());
+		assertNotNull(events);
+		assertTrue(events.size() > 0);
 	}
 
 	private void assertOk(Response response) {

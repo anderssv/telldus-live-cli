@@ -1,7 +1,7 @@
 Telldus live
 
 Usage:
-  telldus-live switch (on|off|status) <device_id>
+  telldus-live switch (on|off|status|history) <device_id>
   telldus-live sensor <sensor_id>
   telldus-live -h | --help
 

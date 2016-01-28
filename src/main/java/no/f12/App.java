@@ -41,6 +41,8 @@ public class App {
 				this.repository.turnDeviceOff(deviceId);
 			} else if ((Boolean) doResult.get("status")) {
 				print("Device " + deviceId + " state: " + this.getDeviceState(deviceId));
+			} else if ((Boolean) doResult.get("history")) {
+				
 			}
 		} else if ((Boolean) doResult.get("sensor")) {
 			String deviceId = (String) doResult.get("<sensor_id>");

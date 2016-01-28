@@ -63,6 +63,15 @@ public class CommandLineTest {
 	}
 
 	@Test
+	public void shouldShowHistoryForDevice() throws IOException {
+		App application = createTestApplication();
+
+		String deviceId = deviceId();
+		application
+				.handleCommandLine(new String[] { "switch", "history", deviceId });
+	}
+
+	@Test
 	public void shouldTurnOffDevice() throws IOException, InterruptedException {
 		App application = createTestApplication();
 
@@ -80,15 +89,14 @@ public class CommandLineTest {
 		String deviceId = sensorId();
 		application
 				.handleCommandLine(new String[] { "sensor", deviceId });
-		// TODO Need some way to validate that it's working, no real assertions here
 	}
 
-	private String sensorId() {
+	public static String sensorId() {
 		return FileUtil.readPropertyFile().getProperty(
 				"telldus.api.test.sensor");
 	}
 
-	private String deviceId() {
+	public static String deviceId() {
 		return FileUtil.readPropertyFile().getProperty(
 				"telldus.api.test.onoffdevice");
 	}

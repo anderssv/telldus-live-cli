@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import no.f12.telldus.live.domain.Device;
+import no.f12.telldus.live.domain.DeviceEvent;
+
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 
@@ -52,6 +55,11 @@ public class TelldusLiveRepositoryStub implements TelldusRepository {
 	@Override
 	public String getSensorValues(String deviceId) {
 		return "10";
+	}
+
+	@Override
+	public List<DeviceEvent> getDeviceHistory(String deviceId) {
+		return null;
 	}
 
 }

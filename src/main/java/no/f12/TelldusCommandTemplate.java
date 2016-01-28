@@ -22,6 +22,14 @@ public class TelldusCommandTemplate {
 		return callback.doCommand(jsonMap);
 	}
 
+	public <T> T execute(String resourceUrl, String deviceId, Map<String, String> parameters,
+			CommandCallback<T> callback) {
+		parameters.put("id", deviceId);
+		JsonNavigator jsonMap = performRequest(resourceUrl, parameters);
+
+		return callback.doCommand(jsonMap);
+	}
+
 	public <T> T execute(String resourceUrl, Map<String, String> parameters,
 			CommandCallback<T> callback) {
 		JsonNavigator jsonMap = performRequest(resourceUrl, parameters);

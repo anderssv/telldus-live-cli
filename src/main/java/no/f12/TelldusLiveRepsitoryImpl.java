@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import no.f12.telldus.live.domain.Device;
+import no.f12.telldus.live.domain.DeviceEvent;
+
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.GoogleApi;
 import org.scribe.model.OAuthRequest;
@@ -79,8 +82,6 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 					}
 				});
 	}
-	
-	
 
 	public OAuthRequest createAndSignRequest(String url,
 			Map<String, String> parameters) {
@@ -159,6 +160,28 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 						});
 
 		return sensorValues.get(deviceId);
+	}
+
+	@Override
+	public List<DeviceEvent> getDeviceHistory(String deviceId) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("to", "1000000000000");
+		return new TelldusCommandTemplate(this).execute("device/history",
+				deviceId, params, new CommandCallback<List<DeviceEvent>>() {
+
+					@Override
+					List<DeviceEvent> doCommand(JsonNavigator result) {
+						List<Map<String, Integer>> rawEvents = result
+								.findAll("$.history");
+						List<DeviceEvent> deviceEvents = new ArrayList<DeviceEvent>();
+
+						for (Map<String, Integer> event : rawEvents) {
+							deviceEvents.add(new DeviceEvent(event.get("state"), event.get("ts")));
+						}
+
+						return deviceEvents;
+					}
+				});
 	}
 
 }
