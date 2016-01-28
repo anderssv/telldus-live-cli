@@ -14,6 +14,7 @@ import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 
 import static no.f12.CommandLineTest.createTestApplication;
+
 public class RepositoryTest {
 
 	private static final String DEVICE_MISSING = "666666";
@@ -35,8 +36,7 @@ public class RepositoryTest {
 
 		Map<String, String> params = new HashMap<>();
 		params.put("id", RepositoryTest.DEVICE_MISSING);
-		OAuthRequest request = repo.createAndSignRequest("device/turnOn",
-				params);
+		OAuthRequest request = repo.createAndSignRequest("device/turnOn", params);
 		Response response = request.send();
 
 		assertNotOk(response);
@@ -49,7 +49,7 @@ public class RepositoryTest {
 		assertNotNull(devices);
 		assertTrue(devices.size() > 0);
 	}
-	
+
 	@Test
 	public void shouldRetrieveHistory() {
 		TelldusRepository repo = new TelldusLiveRepsitoryImpl();
@@ -65,8 +65,7 @@ public class RepositoryTest {
 
 	private void assertNotOk(Response response) {
 		assertEquals("HTTP/1.1 200 OK", response.getHeader(null));
-		assertTrue(response.getBody(), response.getBody()
-				.contains("You do not own"));
+		assertTrue(response.getBody(), response.getBody().contains("You do not own"));
 	}
 
 }

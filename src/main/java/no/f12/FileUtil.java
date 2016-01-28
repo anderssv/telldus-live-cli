@@ -20,19 +20,15 @@ public class FileUtil {
 			fileInput.close();
 
 		} catch (FileNotFoundException e) {
-			throw new RuntimeException(
-					"Could not locate properties for Telldus authentication", e);
+			throw new RuntimeException("Could not locate properties for Telldus authentication", e);
 		} catch (IOException e) {
-			throw new RuntimeException(
-					"Error reading properties file for Telldus authentication",
-					e);
+			throw new RuntimeException("Error reading properties file for Telldus authentication", e);
 		}
 		return props;
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static String readClassPathFile(Class clazz, String filename)
-			throws IOException {
+	public static String readClassPathFile(Class clazz, String filename) throws IOException {
 		URL resource = clazz.getClassLoader().getResource(filename);
 		String json = IOUtils.toString(resource.openStream());
 		return json;

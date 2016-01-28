@@ -1,7 +1,5 @@
 package no.f12;
 
-import static no.f12.JsonParser.parseJson;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,38 +28,33 @@ public class TelldusCommandTemplate {
 		return callback.doCommand(jsonMap);
 	}
 
-	public <T> T execute(String resourceUrl, Map<String, String> parameters,
-			CommandCallback<T> callback) {
+	public <T> T execute(String resourceUrl, Map<String, String> parameters, CommandCallback<T> callback) {
 		JsonNavigator jsonMap = performRequest(resourceUrl, parameters);
 
 		return callback.doCommand(jsonMap);
 	}
 
-	public <T> T execute(String resourceUrl, String deviceId,
-			CommandCallback<T> callback) {
+	public <T> T execute(String resourceUrl, String deviceId, CommandCallback<T> callback) {
 		Map<String, String> params = new HashMap<>();
 		params.put("id", deviceId);
 
 		return this.execute(resourceUrl, params, callback);
 	}
 
-	private JsonNavigator performRequest(String resourceUrl,
-			Map<String, String> params) {
-		OAuthRequest request = this.repo.createAndSignRequest(resourceUrl,
-				params);
+	private JsonNavigator performRequest(String resourceUrl, Map<String, String> params) {
+		OAuthRequest request = this.repo.createAndSignRequest(resourceUrl, params);
 		Response response = request.send();
 
-		JsonNavigator jsonMap = parseJson(response.getBody());
+		JsonNavigator jsonMap = new JsonNavigator(response.getBody());
 		assertOk(response, jsonMap);
 		return jsonMap;
 	}
 
 	private void assertOk(Response response, JsonNavigator jsonMap) {
-		if (!"HTTP/1.1 200 OK".equals(response.getHeader(null))
-				|| response.getBody() == null || jsonMap.exists("$.error")) {
-			throw new RuntimeException("Result from server is nok ok! Header: "
-					+ response.getHeaders() + " --- Result: "
-					+ jsonMap.toString());
+		if (!"HTTP/1.1 200 OK".equals(response.getHeader(null)) || response.getBody() == null
+				|| jsonMap.exists("$.error")) {
+			throw new RuntimeException("Result from server is nok ok! Header: " + response.getHeaders()
+					+ " --- Result: " + jsonMap.toString());
 		}
 	}
 

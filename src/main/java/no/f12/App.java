@@ -8,15 +8,15 @@ import org.docopt.clj;
 public class App {
 
 	private TelldusRepository repository;
-	
+
 	public App(TelldusRepository repo) {
 		this.repository = repo;
-		
+
 		if (this.repository == null) {
 			throw new IllegalStateException("Cannot create application without repository");
 		}
 	}
-	
+
 	public static void main(String[] args) throws IOException {
 		App app = new App(new TelldusLiveRepsitoryImpl());
 		int exitCode = app.handleCommandLine(args);
@@ -37,12 +37,12 @@ public class App {
 			String deviceId = (String) doResult.get("<device_id>");
 			if ((Boolean) doResult.get("on")) {
 				this.repository.turnDeviceOn(deviceId);
-			} else if((Boolean) doResult.get("off")) {
+			} else if ((Boolean) doResult.get("off")) {
 				this.repository.turnDeviceOff(deviceId);
 			} else if ((Boolean) doResult.get("status")) {
 				print("Device " + deviceId + " state: " + this.getDeviceState(deviceId));
 			} else if ((Boolean) doResult.get("history")) {
-				
+
 			}
 		} else if ((Boolean) doResult.get("sensor")) {
 			String deviceId = (String) doResult.get("<sensor_id>");
@@ -51,7 +51,7 @@ public class App {
 		} else {
 			throw new IllegalArgumentException("Don't know what to do with that command line:" + doResult);
 		}
-		
+
 		return 0;
 	}
 

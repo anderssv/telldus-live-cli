@@ -28,15 +28,13 @@ public class CommandLineTest {
 
 	@Test
 	public void shouldPassCommandLineChecksForDeviceOn() throws IOException {
-		int returnCode = createTestApplication().handleCommandLine(
-				new String[] { "switch", "on", deviceId() });
+		int returnCode = createTestApplication().handleCommandLine(new String[] { "switch", "on", deviceId() });
 		assertEquals(0, returnCode);
 	}
 
 	@Test
 	public void shouldNotPassCommandLineChecksForBlank() throws IOException {
-		int returnCode = createTestApplication().handleCommandLine(
-				new String[] {});
+		int returnCode = createTestApplication().handleCommandLine(new String[] {});
 		assertEquals(1, returnCode);
 	}
 
@@ -45,8 +43,7 @@ public class CommandLineTest {
 		App application = createTestApplication();
 
 		String deviceId = deviceId();
-		application
-				.handleCommandLine(new String[] { "switch", "on", deviceId });
+		application.handleCommandLine(new String[] { "switch", "on", deviceId });
 		Thread.sleep(3000);
 		assertTrue(application.getDeviceState(deviceId));
 	}
@@ -56,10 +53,8 @@ public class CommandLineTest {
 		App application = createTestApplication();
 
 		String deviceId = deviceId();
-		application
-				.handleCommandLine(new String[] { "switch", "on", deviceId });
-		application.handleCommandLine(new String[] { "switch", "status",
-				deviceId });
+		application.handleCommandLine(new String[] { "switch", "on", deviceId });
+		application.handleCommandLine(new String[] { "switch", "status", deviceId });
 	}
 
 	@Test
@@ -67,8 +62,7 @@ public class CommandLineTest {
 		App application = createTestApplication();
 
 		String deviceId = deviceId();
-		application
-				.handleCommandLine(new String[] { "switch", "history", deviceId });
+		application.handleCommandLine(new String[] { "switch", "history", deviceId });
 	}
 
 	@Test
@@ -76,29 +70,25 @@ public class CommandLineTest {
 		App application = createTestApplication();
 
 		String deviceId = deviceId();
-		application
-				.handleCommandLine(new String[] { "switch", "off", deviceId });
+		application.handleCommandLine(new String[] { "switch", "off", deviceId });
 		Thread.sleep(3000);
 		assertFalse(application.getDeviceState(deviceId));
 	}
-	
+
 	@Test
 	public void shouldGetSensorValues() throws IOException {
 		App application = createTestApplication();
 
 		String deviceId = sensorId();
-		application
-				.handleCommandLine(new String[] { "sensor", deviceId });
+		application.handleCommandLine(new String[] { "sensor", deviceId });
 	}
 
 	public static String sensorId() {
-		return FileUtil.readPropertyFile().getProperty(
-				"telldus.api.test.sensor");
+		return FileUtil.readPropertyFile().getProperty("telldus.api.test.sensor");
 	}
 
 	public static String deviceId() {
-		return FileUtil.readPropertyFile().getProperty(
-				"telldus.api.test.onoffdevice");
+		return FileUtil.readPropertyFile().getProperty("telldus.api.test.onoffdevice");
 	}
 
 }

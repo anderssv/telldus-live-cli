@@ -16,7 +16,7 @@ public class JsonNavigator {
 	public <T> T get(String path, Class<T> type) {
 		return JsonPath.read(this.json, path);
 	}
-	
+
 	public List findAll(String path) {
 		return JsonPath.read(this.json, path);
 	}
@@ -29,7 +29,7 @@ public class JsonNavigator {
 			return Boolean.FALSE;
 		}
 	}
-	
+
 	public String toString() {
 		return this.json;
 	}

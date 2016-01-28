@@ -26,11 +26,11 @@ public class TelldusLiveRepositoryStub implements TelldusRepository {
 	public OAuthRequest createAndSignRequest(String string, Map<String, String> params) {
 		OAuthRequest request = mock(OAuthRequest.class);
 		Response response = mock(Response.class);
-		
+
 		when(request.send()).thenReturn(response);
 		when(response.getHeader(null)).thenReturn("HTTP/1.1 200 OK");
 		when(response.getBody()).thenReturn("");
-		
+
 		return request;
 	}
 
@@ -46,7 +46,7 @@ public class TelldusLiveRepositoryStub implements TelldusRepository {
 	public void turnDeviceOn(String deviceId) {
 		this.deviceStates.put(deviceId, "true");
 	}
-	
+
 	@Override
 	public void turnDeviceOff(String deviceId) {
 		this.deviceStates.put(deviceId, "false");
