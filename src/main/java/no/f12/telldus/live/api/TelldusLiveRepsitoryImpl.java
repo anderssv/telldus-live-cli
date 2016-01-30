@@ -1,5 +1,7 @@
 package no.f12.telldus.live.api;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -165,7 +167,7 @@ public class TelldusLiveRepsitoryImpl implements TelldusRepository {
 						List<DeviceEvent> deviceEvents = new ArrayList<DeviceEvent>();
 
 						for (Map<String, Integer> event : rawEvents) {
-							deviceEvents.add(new DeviceEvent(event.get("state"), event.get("ts")));
+							deviceEvents.add(new DeviceEvent(event.get("state"), Instant.ofEpochSecond(event.get("ts"))));
 						}
 
 						return deviceEvents;
